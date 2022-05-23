@@ -9,7 +9,7 @@ export default function Home() {
   const { siteConfig } = useDocusaurusContext();
 
   useEffect(() => {
-    location.href = "/blog/docs/intro";
+    location.href = "/blog/docs/About%20Me";
   });
 
   return (
