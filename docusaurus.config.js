@@ -6,7 +6,7 @@ const darkCodeTheme = require("prism-react-renderer/themes/dracula");
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: "로이 Frontend 기술 블로그",
+  title: "로이 기술 블로그",
   tagline: "기술 블로그",
   url: "https://devxe.github.io/",
   baseUrl: "/blog/",
@@ -58,11 +58,11 @@ const config = {
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
       navbar: {
-        title: "테스트",
-        logo: {
-          alt: "로이",
-          src: "img/logo.svg",
-        },
+        title: "기술 블로그 ✌️🛠",
+        // logo: {
+        //   alt: "로이",
+        //   src: "img/logo.svg",
+        // },
         items: [
           // {
           //   type: "doc",
