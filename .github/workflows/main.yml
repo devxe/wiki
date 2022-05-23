@@ -31,6 +31,8 @@ jobs:
         if: success()
         uses: crazy-max/ghaction-github-pages@v2
         with:
+          username: devxe
+          password: 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
           target_branch: gh-pages
           build_dir: build
         env:
