@@ -8,8 +8,8 @@ const darkCodeTheme = require("prism-react-renderer/themes/dracula");
 const config = {
   title: "My Site",
   tagline: "Dinosaurs are cool",
-  url: "https://your-docusaurus-test-site.com",
-  baseUrl: "/",
+  url: "https://devxe.github.io/",
+  baseUrl: "/blog/",
   onBrokenLinks: "throw",
   organizationName: "devxe", // Usually your GitHub org/user name.
   projectName: "blog.tech", // Usually your repo name.
