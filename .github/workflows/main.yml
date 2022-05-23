@@ -25,7 +25,6 @@ jobs:
       # Install and build Docusaurus blog.tech
       - name: Build Docusaurus blog.tech
         run: |
-          cd blog.tech
           npm install 
           npm run build
       - name: Deploy to GitHub Pages
