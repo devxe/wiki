@@ -22,8 +22,8 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: "16"
-      # Install and build Docusaurus blog.tech
-      - name: Build Docusaurus blog.tech
+      # Install and build Docusaurus blog
+      - name: Build Docusaurus blog
         run: |
           npm install 
           npm run build
