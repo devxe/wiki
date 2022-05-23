@@ -23,7 +23,7 @@ jobs:
         with:
           node-version: "16"
       # Install and build Docusaurus blog
-      - name: Build Docusaurus blog.tech
+      - name: Build Docusaurus blog
         run: |
           npm install 
           npm run build
@@ -32,6 +32,7 @@ jobs:
         uses: crazy-max/ghaction-github-pages@v2
         with:
           username: devxe
+          password: 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
           target_branch: gh-pages
           build_dir: build
         env:
