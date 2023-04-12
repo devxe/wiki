@@ -1,20 +1,17 @@
-import React, { useEffect } from "react";
-import clsx from "clsx";
-import Layout from "@theme/Layout";
-import Link from "@docusaurus/Link";
 import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
-import styles from "./index.module.css";
+import Layout from "@theme/Layout";
+import React, { useEffect } from "react";
 
 export default function Home() {
   const { siteConfig } = useDocusaurusContext();
 
   useEffect(() => {
-    location.href = "/blog/docs/About%20Me";
+    location.href = "/wiki/docs/Docker/도커 등장 배경";
   });
 
   return (
     <Layout
-      title={`기술 블로그 | ${siteConfig.title}`}
+      title=""
       description="Description will go into a meta tag in <head />"
     ></Layout>
   );

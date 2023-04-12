@@ -6,13 +6,13 @@ const darkCodeTheme = require("prism-react-renderer/themes/dracula");
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: "로이 기술 블로그",
-  tagline: "기술 블로그",
+  title: "Roy's Wiki",
+  tagline: "Wiki",
   url: "https://devxe.github.io/",
-  baseUrl: "/blog/",
+  baseUrl: "/wiki/",
   onBrokenLinks: "throw",
   organizationName: "devxe", // Usually your GitHub org/user name.
-  projectName: "기술 블로그", // Usually your repo name.
+  projectName: "Roy's Wiki", // Usually your repo name.
   trailingSlash: false,
   onBrokenMarkdownLinks: "warn",
   favicon: "img/favicon.ico",
@@ -53,12 +53,15 @@ const config = {
       }),
     ],
   ],
-
+  markdown: {
+    mermaid: true,
+  },
+  themes: ["@docusaurus/theme-mermaid"],
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
       navbar: {
-        title: "기술 블로그 ✌️🛠",
+        title: "Roy's Wiki",
         // logo: {
         //   alt: "로이",
         //   src: "img/logo.svg",
@@ -80,6 +83,10 @@ const config = {
       prism: {
         theme: lightCodeTheme,
         darkTheme: darkCodeTheme,
+      },
+      tableOfContents: {
+        minHeadingLevel: 2,
+        maxHeadingLevel: 5,
       },
     }),
 };
