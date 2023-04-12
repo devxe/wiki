@@ -1,0 +1,56 @@
+---
+sidebar_position: 1
+author: 로이
+---
+
+import Highlight from "@site/src/components/Highlight";
+import UnderLine from "@site/src/components/UnderLine";
+
+# 도커 이미지 다운로드
+
+생성한 도커 이미지는 [도커 허브(Docker Hub)](https://hub.docker.com/)에 저장하거나 또는 공유할 수 있는 공식적인 이미지 레지스트리(Registry)입니다.<br/>
+이미지를 검색하는 방법은 <Highlight>도커 허브 홈페이지 검색창</Highlight>에 원하는 이미지 이름을 입력하거나 또는 <Highlight>도커 명령어</Highlight>로 찾아 볼 수 있습니다.
+
+## 도커 이미지 검색
+
+다음 명령어를 사용하여 도커 이미지를 검색할 수 있습니다.
+
+```bash {3-11}
+docker search jenkins
+
+NAME                           DESCRIPTION                                     STARS     OFFICIAL   AUTOMATED
+jenkins                        DEPRECATED; use "jenkins/jenkins:lts" instead   5617      [OK]
+jenkins/jenkins                The leading open source automation server       3457
+jenkins/jnlp-slave             a Jenkins agent which can connect to Jenkins…   156                  [OK]
+jenkins/inbound-agent                                                          96
+bitnami/jenkins                Bitnami Docker Image for Jenkins                59                   [OK]
+jenkins/agent                                                                  52
+jenkins/slave                  base image for a Jenkins Agent, which includ…   49                   [OK]
+jenkins/ssh-slave              A Jenkins slave using SSH to establish conne…   39                   [OK]
+```
+
+## 도커 이미지 가져오기
+
+다음 명령어를 사용하여 도커 이미지를 가져올 수 있습니다.
+
+```bash
+docker pull jenkins/jenkins:latest
+```
+
+:::info
+이미지를 가져오기 위해서는 도커 허브 계정이 필요하지 않습니다. 하지만 이미지를 업로드하거나 관리하려면 도커 허브 계정이 필요합니다. 계정을 가지고 있다면 docker login 명령어를 사용하여 도커 허브 계정으로 로그인하고 이미지를 업로드할 수 있습니다.
+:::
+
+## Jenkins 컨테이너 실행
+
+다음 명령어를 사용하여 도커 이미지를 가져올 수 있습니다.
+
+```bash
+docker run --name jenkin_dev -p 51352:8080 -p 50000:50000 -d -v jenkins_home:/var/jenkins_home -u root jenkins/jenkins:latest
+```
+
+**`-v`**<br/>
+볼륨을 설정하는 옵션입니다.
+
+**`-u`**<br/>
+컨테이너 안에서 실행되는 프로세스의 사용자 ID와 그룹 ID를 지정하는 옵션입니다.

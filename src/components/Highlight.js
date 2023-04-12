@@ -7,6 +7,7 @@ export default function Highlight({ children, color }) {
         backgroundColor: color,
         borderBottom: "3px solid #ff6f0f",
         padding: "0 0 0.25rem 0",
+        fontWeight: "bold",
       }}
     >
       {children}

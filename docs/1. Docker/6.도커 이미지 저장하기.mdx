@@ -1,0 +1,141 @@
+---
+sidebar_position: 1
+author: 로이
+---
+
+import Highlight from "@site/src/components/Highlight";
+import UnderLine from "@site/src/components/UnderLine";
+
+# 도커 이미지 업로드
+
+도커 이미지를 저장하는 방식은 **2가지** 방법이 있습니다.
+
+## 도커 이미지 저장 방식
+
+### 1. Docker Hub
+
+Docker Hub은 Docker 이미지를 공유하고 저장하는 중앙 저장소입니다. 이 저장소는 Docker 커뮤니티에서 제공하는 공식 서비스로, 모든 사용자가 무료로 사용할 수 있습니다. Docker Hub는 공개 이미지와 개인 이미지를 지원합니다.
+
+### 2. Private Registry
+
+Docker Private Registry는 Docker 이미지를 저장하고 공유하는 데 사용되는 로컬 저장소입니다. 이 저장소는 회사나 조직 내에서만 접근 가능하며, 공개적으로 접근할 수 없습니다. Docker Private Registry를 사용하면 내부적으로 사용되는 소프트웨어나 서비스를 이미지로 빌드하고 배포할 수 있습니다.
+
+![도커 Registry 구조](./img/6-1.png)
+
+## 1. Docker Hub
+
+- [https://hub.docker.com/](https://hub.docker.com/) 사이트 접속하여 계정을 생성하고 무료로 이용하는 Plan 선택합니다.
+- 계정을 생성하면 이메일로 계정 인증을 받으면 바로 사용할 수 있습니다.
+
+![도커 Repositories 정보](./img/6-2.png)
+
+### 이미지 태그 복제
+
+다음 명령어를 사용하여 도커 이미지 태그를 변경하여 복제할 수 있습니다.
+
+:::info
+이미지를 저장하기 위해서는 저장소 이름과 이미지 이름이 같아야 합니다.
+:::
+
+```bash
+docker tag my-express yongil/node-hello-world
+# 태그를 사용하여 my-express 이미지를 yongil/node-hello-world 이미지로 복제
+```
+
+### 이미지 업로드
+
+다음 명령어를 사용하여 도커 이미지 저장할 수 있습니다.
+
+```bash {13}
+docker push yongil/node-hello-world
+
+Using default tag: latest
+The push refers to repository [docker.io/yongil/node-hello-world]
+7dfad69eca6e: Preparing
+22e1bb9415ca: Preparing
+9e0a24b40446: Preparing
+c87043afb1ad: Waiting
+6938fe2a1c1f: Waiting
+c8d106014326: Waiting
+d64ea0f888ba: Waiting
+f66845469c01: Waiting
+`denied: requested access to the resource is denied`
+```
+
+:::danger
+denied: requested access to the resource is denied<br/>
+해당 이슈는 어느 저장소로 저장 하는지 정해지지 않아 발생되는 이슈입니다.
+:::
+
+### 도커 로그인
+
+다음 명령어를 사용하여 도커 허브 저장소에 로그인할 수 있습니다.
+
+```bash {3-6}
+docker login
+
+Username: yongil
+Password:
+
+Login Succeeded
+```
+
+로그인을 성공했다면 다시 한번 이미지를 push 해봅니다.
+
+```bash {18}
+docker push yongil/node-hello-world
+
+Using default tag: latest
+The push refers to repository [docker.io/yongil/node-hello-world]
+7dfad69eca6e: Pushed
+22e1bb9415ca: Pushed
+9e0a24b40446: Pushed
+bfdbda36b8ba: Pushed
+fd23370fe913: Mounted from library/node
+df21e42d205a: Mounted from library/node
+c8d106014326: Mounted from library/node
+d64ea0f888ba: Mounted from library/node
+f66845469c01: Mounted from library/node
+latest: digest: sha256:703ef096df10de903839d865c6ad2639a9fdbe9162af84199e5c46ee582e1a79 size: 3048
+```
+
+### 이미지 업로드 확인
+
+다음 명령어를 사용하여 이미지를 확인할 수 있습니다.
+
+```bash
+docker search yongil # 확인
+```
+
+### 이미지 다운로드
+
+도커 허브에 이미지를 업로드 했다면 Docker가 설치되어있는 환경이면 어디서든지 이미지를 다운로드 받을 수 있습니다.<br/>
+다음 명령어를 사용하여 도커 허브에 업로드 했던 이미지를 다운로드 받을 수 있습니다.
+
+```bash
+
+docker pull yongil/node-hello-world
+
+```
+
+## 2. Private Registry
+
+Private Registry는 Docker 이미지를 저장하고 공유하는 데 사용되는 로컬 저장소입니다. 이 저장소는 회사나 조직 내에서만 접근 가능하며, 공개적으로 접근할 수 없습니다. Private Registry를 사용하면 내부적으로 사용되는 소프트웨어나 서비스를 이미지로 빌드하고 배포할 수 있습니다.
+
+### 특징
+
+#### - 보안
+
+공개 저장소인 Docker Hub은 이미지가 노출되거나 조작될 수 있는 위험이 있습니다. 하지만 Docker Private Registry는 회사나 조직 내에서만 접근 가능하기 때문에 보안성이 더 높습니다. 또한 이미지를 전송할 때 SSL을 사용하여 데이터를 암호화할 수 있습니다.
+
+#### - 커스터마이징
+
+Docker Private Registry는 회사나 조직 내에서 사용하는 소프트웨어나 서비스를 이미지로 빌드하고 배포하기에 적합합니다. 이를 통해 개발자는 커스터마이징이 가능한 이미지를 만들 수 있으며, 이를 이용해 소프트웨어나 서비스를 쉽게 배포할 수 있습니다.
+
+#### - 대역폭 절약
+
+Docker Private Registry를 사용하면 이미지를 로컬 저장소에 저장할 수 있으므로, Docker Hub을 사용할 때 발생하는 대역폭 비용을 절약할 수 있습니다. 또한 로컬 저장소에 이미지를 캐싱하여 배포 시간을 단축시킬 수 있습니다.
+
+#### - 오프라인 작업
+
+Docker Private Registry는 회사나 조직 내부에서 동작하므로, 인터넷이 연결되지 않은 환경에서도 Docker 이미지를 개발하고 배포할 수 있습니다.

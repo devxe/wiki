@@ -4,6 +4,7 @@
 *.iml
 *.code-workspace
 .changelog
+.build
 
 node_modules
 .yarn
