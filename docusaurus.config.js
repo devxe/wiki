@@ -9,7 +9,7 @@ const config = {
   title: "Roy's Wiki",
   tagline: "Wiki",
   url: "https://devxe.github.io/",
-  baseUrl: "/wiki/",
+  baseUrl: "/",
   onBrokenLinks: "throw",
   organizationName: "devxe", // Usually your GitHub org/user name.
   projectName: "Roy's Wiki", // Usually your repo name.
@@ -23,10 +23,10 @@ const config = {
   // Even if you don't use internalization, you can use this field to set useful
   // metadata like html lang. For example, if your site is Chinese, you may want
   // to replace "en" with "zh-Hans".
-  i18n: {
-    defaultLocale: "ko",
-    locales: ["en", "ko"],
-  },
+  // i18n: {
+  //   defaultLocale: "ko",
+  //   locales: ["en", "ko"],
+  // },
 
   presets: [
     [
@@ -63,7 +63,7 @@ const config = {
       navbar: {
         title: "Roy's Wiki",
         // logo: {
-        //   alt: "로이",
+        //   alt: "Roy",
         //   src: "img/logo.svg",
         // },
         items: [
