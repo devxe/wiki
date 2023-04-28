@@ -6,13 +6,13 @@ const darkCodeTheme = require("prism-react-renderer/themes/dracula");
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: "Roy's Wiki",
+  title: "Roy Wiki",
   tagline: "Wiki",
   url: "https://devxe.github.io/",
   baseUrl: "/",
   onBrokenLinks: "throw",
   organizationName: "devxe", // Usually your GitHub org/user name.
-  projectName: "Roy's Wiki", // Usually your repo name.
+  projectName: "Roy Wiki", // Usually your repo name.
   trailingSlash: false,
   onBrokenMarkdownLinks: "warn",
   favicon: "img/favicon.ico",
@@ -61,7 +61,7 @@ const config = {
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
       navbar: {
-        title: "Roy's Wiki",
+        title: "Roy Wiki",
         // logo: {
         //   alt: "Roy",
         //   src: "img/logo.svg",
