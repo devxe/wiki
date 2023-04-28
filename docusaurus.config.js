@@ -9,7 +9,7 @@ const config = {
   title: "Roy Wiki",
   tagline: "Wiki",
   url: "https://devxe.github.io/",
-  baseUrl: "/",
+  baseUrl: "/wiki",
   onBrokenLinks: "throw",
   organizationName: "devxe", // Usually your GitHub org/user name.
   projectName: "Roy Wiki", // Usually your repo name.
