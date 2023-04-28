@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkblog=self.webpackChunkblog||[]).push([[195],{2841:(e,t,c)=>{c.r(t),c.d(t,{default:()=>r});var i=c(1155),n=c(7294);function r(){return(0,n.useEffect)((()=>{location.href="/wiki/docs/intro"})),n.createElement(i.Z,{title:"",description:""})}}}]);
