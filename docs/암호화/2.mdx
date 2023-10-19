@@ -1,0 +1,57 @@
+---
+sidebar_position: 2
+author: Roy
+---
+
+import Highlight from "@site/src/components/Highlight";
+import UnderLine from "@site/src/components/UnderLine";
+
+# RSA 암호화
+
+## 설명
+
+RSA 암호화(RSA Encryption)는 <UnderLine>공개키 암호화 방식</UnderLine> 중 하나로, 데이터의 안전한 전송 및 보호를 위해 사용됩니다.
+이 방식은 Ron Rivest, Adi Shamir, Leonard Adleman에 의해 개발되어 이름(RSA)을 딴 알고리즘입니다.
+RSA 암호화는 <UnderLine>비대칭 키 암호화 방식</UnderLine>으로서, 데이터를 암호화하고 복호화하기 위해 두 개의 서로 다른 키, 즉 <Highlight>공개키(public key)</Highlight>와 <Highlight>개인키(private key)</Highlight>를 사용합니다
+
+## 비대칭키 암호화
+
+- **공개키(public key)**: 공개키는 누구나 알 수 있는 키로, <UnderLine>데이터를 암호화</UnderLine> 하는 데 사용됩니다.
+  공개키로 암호화된 데이터는 해당 공개키로만 해독할 수 있습니다
+
+- **개인키(private key)**: 개인키는 공개되지 않아야 하는 비밀 키로, 암호화된 <UnderLine>데이터를 복호화</UnderLine> 하는 데 사용됩니다. 개인키는 공개키와 짝을 이루며 오직 소유자만 알고 있어야 합니다.
+
+## 숫자의 의미
+
+:::info RSA 2048, 3072, 4096
+RSA 키의 <UnderLine>비트 수</UnderLine>를 나타냅니다. 이 숫자는 RSA 알고리즘에서 사용되는 키의 길이 또는 크기를 나타내며, <UnderLine>보안 수준을 결정하는 중요한 요소 중 하나</UnderLine>입니다. 키의 길이가 길면 길수록 <UnderLine>암호화와 해독에 필요한 계산량이 증가</UnderLine>하므로 보안 수준이 높아집니다. 즉, 더 긴 키 길이는 더 안전한 암호화를 제공하지만, <UnderLine>동시에 계산 비용</UnderLine>도 증가합니다. 따라서 키 길이를 선택할 때는 보안 요구 사항과 성능을 고려해야 합니다.
+
+2048 비트 길이의 RSA 키는 현재 많은 보안 응용 프로그램에서 권장되는 표준 보안 수준입니다.
+:::
+
+## 장점
+
+- <Highlight>보안성</Highlight>: RSA 알고리즘은 현재까지까지 <UnderLine>
+    강력한 보안성을 제공하는 암호화 방식 중 하나
+  </UnderLine>입니다. 소수 분해 문제와 관련된 수학적 원리를 기반으로 하며, 이 문제를
+  풀기 어렵기 때문에 안전성이 높습니다
+- **비대칭 키**: RSA는 비대칭 키 암호화 방식으로, 공개키와 개인키를 사용합니다. 이로써 데이터를 안전하게 전달하고 디지털 서명을 생성할 수 있습니다.
+- **디지털 서명**: RSA는 디지털 서명을 생성하는 데에도 사용됩니다. 데이터의 무결성과 출처를 검증하기 위한 강력한 도구로 활용됩니다.
+- **표준화**: RSA는 NIST(National Institute of Standards and Technology)에서 공식적으로 표준으로 채택한 암호화 알고리즘 중 하나입니다.
+- **널리 지원**: RSA는 다양한 플랫폼과 언어에서 구현되어 있으며, 따라서 널리 지원되고 사용되고 있습니다.
+
+## 단점
+
+- <Highlight>성능</Highlight>: RSA 알고리즘은 대칭 키 암호화 방식에 비해 연산
+  비용이 높습니다. 따라서 대량의 <UnderLine>
+    데이터를 빠르게 암호화하거나 복호화하는 데는 부적합
+  </UnderLine>할 수 있습니다.
+- <Highlight>암호화된 데이터 크기</Highlight>: RSA는 <UnderLine>
+    대칭 키 암호화 방식보다 암호화된 데이터 크기가 큽니다.
+  </UnderLine> 이는 데이터베이스 백업 또는 대용량 파일의 암호화 시에 추가 저장
+  공간을 필요로 합니다.
+- <Highlight>키 관리</Highlight>: RSA 키 관리는 중요한 측면입니다. <UnderLine>
+    비대칭 키 암호화 방식이므로 공개키, 개인키 두 가지의 키를 안전하게 관리
+  </UnderLine>해야 합니다.
+- **키 길이**: RSA의 보안 수준은 키 길이에 의존합니다. 높은 보안 수준을 원한다면 긴 키를 사용해야 하며, 이로 인해 연산 비용이 증가할 수 있습니다.
+- **공개키 크기**: 공개키는 비교적 큰 크기를 갖는데, 이로 인해 데이터 전송 시에 공개키 크기에 따른 오버헤드가 발생할 수 있습니다.

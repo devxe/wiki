@@ -5,7 +5,7 @@ export default function Highlight({ children, color }) {
     <span
       style={{
         backgroundColor: color,
-        borderBottom: "3px solid #ff6f0f",
+        borderBottom: "3px solid var(--ifm-color-primary)",
         padding: "0 0 0.25rem 0",
         fontWeight: "bold",
       }}

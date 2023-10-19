@@ -10,6 +10,7 @@ export default function UnderLine({ children, color }) {
         backgroundColor: color,
         borderBottom: `1px solid ${colorMode === "dark" ? " #fff" : "#000"}`,
         padding: "0 0 0.25rem 0",
+        fontWeight: 800,
       }}
     >
       {children}

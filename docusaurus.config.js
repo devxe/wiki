@@ -62,10 +62,10 @@ const config = {
     ({
       navbar: {
         title: "Roy Wiki",
-        // logo: {
-        //   alt: "Roy",
-        //   src: "img/logo.svg",
-        // },
+        logo: {
+          alt: "Wiki",
+          src: "img/logo.png",
+        },
         items: [
           // {
           //   type: "doc",
