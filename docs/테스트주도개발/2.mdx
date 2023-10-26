@@ -11,14 +11,14 @@ import Color from "@site/src/components/Color";
 
 ## Cypress란 무엇인가?
 
-Cypress는 오픈 소스의 프론트엔드 테스팅 도구로, 웹 애플리케이션을 테스트하는 과정을 단순화하는 데 사용됩니다. Cypress는 특히 엔드 투 엔드 (End-to-End, E2E) 테스트에 중점을 둔 도구로, 웹 애플리케이션의 테스트를 작성하고 실행하는 데 있어 개발자 친화적이며 직관적인 방식을 제공합니다.
+Cypress는 오픈 소스의 <UnderLine>프론트엔드 테스팅 도구</UnderLine>로, 웹 애플리케이션을 테스트하는 과정을 단순화하는 데 사용됩니다. Cypress는 특히 엔드 투 엔드 (End-to-End, E2E) 테스트에 중점을 둔 도구로, <UnderLine>웹 애플리케이션의 테스트를 작성하고 실행하는 데 있어 개발자 친화적이며 직관적인 방식</UnderLine>을 제공합니다.
 
 - <UnderLine>단위(Unit) 테스트</UnderLine>
 - <UnderLine>통합(Integation) 테스트</UnderLine>
 - <Highlight>E2E(End to End) 테스트</Highlight>
-- 성능(Performance) 테스트
+- <UnderLine>회귀(Regression) 테스트</UnderLine>
 
-E2E 테스트는 실제 사용자의 실행 환경과 거의 동일한 환경에서 테스트를 진행하기 때문에 실제 상황에서 발생할 수 있는 에러를 사전에 발견할 수 있습니다. 또한 수동으로 테스트할 때 시간이 많이 걸리거나, 놓칠 수 있는 부분들을 반복 테스트 하기에도 매우 유용합니다. 내가 개발한 기능 명세들이 실제 잘 동작하는지 매번 수동으로 테스트하지 않고, 자동으로 모두 정상적으로 동작한다는걸 확인할 수 있어 업무 효율성이 높아집니다.
+E2E 테스트는 <UnderLine>실제 사용자의 실행 환경과 거의 동일한 환경에서 테스트를 진행</UnderLine>하기 때문에 실제 상황에서 발생할 수 있는 에러를 사전에 발견할 수 있습니다. 또한 <Highlight>수동으로 테스트할 때 시간이 많이 걸리거나, 놓칠 수 있는 부분들을 반복 테스트 하기에도 매우 유용</Highlight>합니다. 내가 개발한 기능 명세들이 실제 잘 동작하는지 매번 수동으로 테스트하지 않고, 자동으로 모두 정상적으로 동작한다는걸 확인할 수 있어 업무 효율성이 높아집니다.
 
 ## Cypress 설정
 
@@ -38,65 +38,6 @@ npx cypress open
 
 ![실행화면](./img/2-1.png)
 
-### Cypress 주요 문법
-
-**cy.visit(url)**
-
-```js
-// 테스트 진행할 URL 주소 입력
-cy.visit("https://example.com");
-```
-
-**cy.get(selector)**
-
-```js
-// selector는 CSS 선택자 DOM 요소를 선택
-cy.get(".button-class");
-```
-
-**cy.contains(content)**
-
-```js
-// 입력한 텍스트 내용을 포함하는 요소 선택
-cy.contains("Login");
-```
-
-**cy.click()**
-
-```js
-// 선택한 요소 클릭
-cy.get(".button-class").click();
-```
-
-**cy.type(text)**
-
-```js
-// 선택한 요소 텍스트 입력
-cy.get('input[type="text"]').type("example@email.com");
-```
-
-**cy.should(conditions)**
-
-```js
-// 선택한 요소가 보여지는지 또는 문구를 포함하는지 확인
-cy.get(".message").should("be.visible");
-cy.get(".username").should("contain", "John Doe");
-```
-
-**cy.intercept(routeAlias, handler)**
-
-```js
-// 네트워크 요청을 가로채고 가짜 응답 제공 (테스트 조건에 따라 요청 제어)
-cy.intercept("GET", "/api/users", { fixture: "users.json" }).as("getUsers");
-```
-
-**cy.wait(alias)**
-
-```js
-// 지정된 별칭(alias)을 가진 요청이 완료될 때까지 대기
-cy.wait("@getUsers");
-```
-
 ### cypress 폴더 구조
 
 ```bash
@@ -111,7 +52,58 @@ cy.wait("@getUsers");
        └── e2e.js
 ```
 
-## 테스트 시나리오
+### Cypress 주요 문법
+
+**cy.visit(url)**: 테스트 진행할 URL 주소 입력
+
+```js
+cy.visit("https://example.com");
+```
+
+**cy.get(selector)**: CSS 선택자 DOM 요소를 선택
+
+```js
+cy.get(".button-class");
+```
+
+**cy.contains(content)**: 입력한 텍스트 내용을 포함하는 요소 선택
+
+```js
+cy.contains("Login");
+```
+
+**cy.click()**: 선택된 요소 클릭
+
+```js
+cy.get(".button-class").click();
+```
+
+**cy.type(text)**: 선택된 요소 텍스트 입력
+
+```js
+cy.get('input[type="text"]').type("example@email.com");
+```
+
+**cy.should(conditions)**: 선택된 요소가 보여지는지, 특정 문구를 포함하는지 확인
+
+```js
+cy.get(".message").should("be.visible");
+cy.get(".username").should("contain", "John Doe");
+```
+
+**cy.intercept(routeAlias, handler)**: 네트워크 요청을 가로채서 가짜 응답 제공 (테스트 조건에 따라 요청 제어)
+
+```js
+cy.intercept("GET", "/api/users", { fixture: "users.json" }).as("getUsers");
+```
+
+**cy.wait(alias)**: 지정된 별칭(alias)을 가진 요청이 완료될 때까지 대기
+
+```js
+cy.wait("@getUsers");
+```
+
+## 테스트 시나리오 작성
 
 ```js
 소유자 회원가입
