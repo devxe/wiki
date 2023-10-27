@@ -42,17 +42,28 @@ npx cypress open
 
 ```bash
  cypress
-   ├── downloads
-   ├── e2e
+   ├── downloads # 테스트 중 파일을 다운로드 하는 경우 여기에 저장
+   ├── e2e # E2E 테스트 스크립트 디렉토리
    │   └── 소유자 회원가입.cy.js
-   ├── fixtures
+   ├── fixtures # 정적 데이터나 예제 데이터를 저장하는 디렉토리
    │   └── example.json
-   └── support
+   └── support # 테스트 스크립트에 사용되는 보조 파일 디렉토리
        ├── commands.js
        └── e2e.js
 ```
 
-### Cypress 주요 문법
+## 테스트 시나리오
+
+### 소유자 회원가입
+
+| 테스트 케이스 ID | 화면명                                     | 테스트 내용                                                                                          | 예상 결과                   |
+| ---------------- | ------------------------------------------ | ---------------------------------------------------------------------------------------------------- | --------------------------- |
+| EVC_TST_002-01   | Front > 로그인 > 회원가입                  | 약관동의 미 선택<br/>본인인증 버튼 클릭                                                              | 회원가입 진행 불가          |
+| EVC_TST_002-02   | Front > 로그인 > 회원가입                  | 가입할 회원유형 선택<br/>약관동의 및 본인인증<br/>개인(선택)<br/>정보 입력 후<br/>회원가입 버튼 클릭 | 회원가입 완료 화면으로 이동 |
+| EVC_TST_002-03   | Front > 로그인 > 회원가입 회원가입 완료 시 | 회원가입 완료 화면 확인                                                                              | 회원가입 완료 화면          |
+| EVC_TST_002-07   | Front > 로그인                             | 아이디 입력<br/>비밀번호 입력<br/>로그인 버튼 클릭                                                   | 로그인 완료                 |
+
+## Cypress 문법
 
 **cy.visit(url)**: 테스트 진행할 URL 주소 입력
 
@@ -106,25 +117,78 @@ cy.wait("@getUsers");
 ## 테스트 시나리오 작성
 
 ```js
-소유자 회원가입
-http://localhost:3000/signup/register?certificateParams=to87ynwtmv0tr9Ey6KrLHrlpnL3su0mQFUj8MsDksUsunziqFltDo061utqoJyEeD1aF2T2scV9pRTxeCtgK5isHK1aYzcqG5hb6p2R5xj7WUxHPWSBKaf0g/PH3YUlJ8S6zDNz/KTc8Me0qz7ZdKS1gQUILcu66/QF/AbSua%20DlIPq2zgLp5gfst1tyeHVEypfYz/eLaw%20XeMxsM7hI9THDGSz4n7By0brhKMlq%20Z4SoDgwysA1CydFMGkbqe7Sg3OMxvijnSycbgMPggJgdYd2WceSCiQ/Dz534GsSI2xhzKIlXqicsJ70K47/woW9GQbh81%20bCiguMdRlz0cG8XouLOyvz9skb/AJNFX1CZ3JJIS9Rs5%20dJfzkUUukFi2kevaagGWTryzcFbQoQoF0Iwg7OyMuNhRIkzwEgBTlogVySklL0YsZtMRyhMS1SAkfTZxciREG8AxznNUElAGvd%20Ug165J4fdwAj6ap4%20g2c8l9cfQHRk8gO36JyTXvWi
-// 1. 회원가입 페이지 이동
-// 2. 아이디 길이 체크: 5자리 미만일 때
-// 3. 아이디 길이 체크: 20자리 이상일 때
-// 4. 아이디 중복 체크: 이미 사용중인 아이디
-// 5. 아이디 중복 체크: 사용 가능한 아이디
-it("회원가입", () => {
-  cy.get("input[name=userId]")
-    .clear()
-    .type(`test${dayjs().format("YYYYMMDDHHmmss")}`);
-  cy.get("button").contains("중복확인").click();
-  cy.get("input[name=userPw]").clear().type("123123123a");
-  cy.get("input[name=userPwConfirm]").clear().type("123123123a");
-  cy.get("input[name=picEml]").clear().type("yi.kim@pmgrow.co.kr");
-  cy.get("button").contains("회원가입").click();
-  cy.get("span.font-bold", { timeout: 50000 }).should(
-    "have.text",
-    "회원가입이 완료"
-  );
+import dayjs from "dayjs";
+
+const 로그인페이지 = () => {
+  cy.visit("http://localhost:3000/home");
+  cy.viewport(1920, 2000);
+  // 회원가입 버튼 클릭
+  cy.contains("로그인").click();
+};
+
+const 회원가입약관페이지이동 = () => {
+  로그인페이지();
+  // 회원가입 버튼 클릭
+  cy.contains("회원가입").click();
+  cy.contains("EV 회원").click();
+};
+
+let userId = "";
+let userPw = "";
+
+describe("EVC_TST_002-01", () => {
+  beforeEach(() => {
+    회원가입약관페이지이동();
+  });
+
+  it("가입할 회원유형 미 선택", () => {
+    cy.contains("본인인증").click();
+    cy.get("#modal")
+      .find("h3")
+      .should("have.text", "필수 약관에 동의해 주세요.");
+  });
+});
+
+describe("EVC_TST_002-02 & EVC_TST_002-03", () => {
+  beforeEach(() => {
+    회원가입약관페이지이동();
+  });
+
+  it("회원가입 진행", () => {
+    회원가입약관페이지이동();
+    cy.wait(500);
+    cy.contains("모든 약관에 동의합니다.").click();
+    cy.wait(500);
+    cy.visit(
+      "http://localhost:3000/signup/register?certificateParams=to87ynwtmv0tr9Ey6KrLHrlpnL3su0mQFUj8MsDksUsunziqFltDo061utqoJyEeD1aF2T2scV9pRTxeCtgK5isHK1aYzcqG5hb6p2R5xj7WUxHPWSBKaf0g/PH3YUlJ8S6zDNz/KTc8Me0qz7ZdKS1gQUILcu66/QF/AbSua%20DlIPq2zgLp5gfst1tyeHVEypfYz/eLaw%20XeMxsM7hI9THDGSz4n7By0brhKMlq%20Z4SoDgwysA1CydFMGkbqe7Sg3OMxvijnSycbgMPggJgdYd2WceSCiQ/Dz534GsSI2xhzKIlXqicsJ70K47/woW9GQbh81%20bCiguMdRlz0cG8XouLOyvz9skb/AJNFX1CZ3JJIS9Rs5%20dJfzkUUukFi2kevaagGWTryzcFbQoQoF0Iwg7OyMuNhRIkzwEgBTlogVySklL0YsZtMRyhMS1SAkfTZxciREG8AxznNUElAGvd%20Ug165J4fdwAj6ap4%20g2c8l9cfQHRk8gO36JyTXvWi"
+    );
+
+    userId = `test${dayjs().format("YYYYMMDDHHmmss")}`;
+    userPw = "123123123a";
+    cy.get("input[name=userId]").clear().type(userId);
+    cy.get("button").contains("중복확인").click();
+    cy.get("input[name=userPw]").clear().type(userPw);
+    cy.get("input[name=userPwConfirm]").clear().type(userPw);
+    cy.get("input[name=picEml]").clear().type("yi.kim@pmgrow.co.kr");
+    cy.get("button").contains("회원가입").click();
+    cy.get("span.font-bold", { timeout: 10000 }).should(
+      "have.text",
+      "회원가입이 완료"
+    );
+  });
+});
+
+describe("EVC_TST_002-02 & EVC_TST_002-03", () => {
+  beforeEach(() => {
+    로그인페이지();
+  });
+
+  it("로그인", () => {
+    cy.get("input[name=userId]").clear().type(userId);
+    cy.get("input[name=userPw]").clear().type(userPw);
+    cy.get("button[type=submit]").click();
+    cy.contains("내정보").should("be.visible");
+    cy.contains("로그아웃").should("be.visible");
+  });
 });
 ```
