@@ -1,0 +1,47 @@
+---
+sidebar_position: 1
+author: Roy
+---
+
+import Highlight from "@site/src/components/Highlight";
+import UnderLine from "@site/src/components/UnderLine";
+
+# Secure Sockets Layer
+
+## SSL는 무엇인가?
+
+SSL은 <Highlight>Secure Sockets Layer</Highlight>의 약어로, 정보를 안전하게 전송하기 위한 <UnderLine>인터넷 보안 프로토콜</UnderLine> 중 하나입니다. SSL은 데이터를 암호화하고 인증하여, 웹사이트와 브라우저 사이에서 전송되는 정보가 중간에 제3자에게 노출되거나 조작되는 것을 방지합니다. 주로 웹사이트에서 개인 정보, 비밀번호, 결제 정보 등을 안전하게 전송하는 데 사용됩니다.
+
+## 동작 원리
+
+1. 클라이언트(웹 브라우저)가 SSL로 보호된 웹사이트에 접속을 시도합니다.
+2. 서버는 공개키와 서버 인증서를 클라이언트에게 제공합니다.
+3. 클라이언트는 서버 인증서가 신뢰할 수 있는 인증 기관(Certificate Authority)에서 발급된 것인지 확인합니다.
+4. 클라이언트와 서버는 암호화된 연결을 설정하고, 공개키를 사용하여 데이터를 암호화하여 전송합니다.
+5. 서버는 클라이언트에게 공개키를 전송하고, 클라이언트는 이 공개키를 사용하여 서버에서 전송한 데이터를 해독합니다.
+
+## 인증서 유형
+
+### 1. 단일 도메인 (Single Domain)
+
+- 하나의 도메인에만 적용되는 인증서입니다.
+- 예를 들어, www.example.com 또는 secure.example.com에만 사용 가능합니다.
+- 가장 일반적인 유형으로, 특정 도메인의 보안을 강화하는 데 사용됩니다.
+
+### 2. 다중 도메인 (Multi-Domain)
+
+- 여러 개의 도메인 또는 서브도메인에 적용할 수 있는 인증서입니다.
+- 하나의 인증서로 example.com, example.net, sub.example.com 등 여러 도메인을 보호할 수 있습니다.
+- 비용 효율적이며 다양한 도메인을 하나의 SSL 인증서로 관리할 수 있습니다.
+
+### 3. 와일드카드 (Wildcard)
+
+- 동일한 도메인의 여러 서브도메인에 적용할 수 있는 인증서입니다.
+- \*.example.com 형식으로 표시하며, 모든 서브도메인에 적용됩니다 (예: blog.example.com, shop.example.com).
+- 다중 도메인 인증서보다 편리하게 여러 서브도메인을 보호할 수 있습니다.
+
+### 4. 확장 검증 (Extended Validation, EV)
+
+- 가장 높은 수준의 보안 및 신뢰성을 제공하는 인증서입니다.
+- 주소 표시줄에 회사 이름이 표시되어 사용자에게 추가적인 확신을 제공합니다.
+- 온라인 비즈니스 및 금융 웹사이트에서 주로 사용됩니다.
