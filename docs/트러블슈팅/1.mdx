@@ -1,0 +1,156 @@
+---
+sidebar_position: 1
+author: Roy
+---
+
+import Highlight from "@site/src/components/Highlight";
+import UnderLine from "@site/src/components/UnderLine";
+
+# private registry 용량 확보
+
+## 디스크 용량 확인
+
+도커로 서비스 운영 중에 <UnderLine>우분투 disk 용량이 100%</UnderLine>가 되어 배포가 실패되는 이슈가 발생되었습니다.
+
+```bash {3-5}
+df -h
+
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/nvme0n1p1  388G  388G    0G 100% /
+...
+```
+
+## 디렉터리 별 용량 확인
+
+가장 용량을 많이 차지하는 디렉터리를 확인해보니 `/var/lib/registry` 디렉터리가 <UnderLine>355G</UnderLine> 차지하고 있었습니다.
+
+```bash {4-5}
+# 디렉터리 용량 확인
+du -h --max-depth=1
+
+355G	./docker
+355G	.
+```
+
+확인해보니 <Highlight>도커 이미지를 배포할 때마다 각 태그 정보를 blob 형태로 파일로 저장되고 있어서 용량이 높았습니다.</Highlight><br/>
+시간이 오래 지난 태그에 대해서는 필요하지 않아 해당 태그에 대한 blob을 지워 용량을 확보하려고 했습니다.<br/>
+
+하지만 무작정 `/var/lib/registry/docker/registry/v2/blobs` 파일을 전부 삭제하기에는 위험하고<br/>
+이미지 태그마다 의존하고 있는 layer와 blob 달라 다음과 같은 방법으로 삭제하였습니다.
+
+## 도커 이미지 repositories 조회
+
+```bash {3-5}
+curl -X GET <REGISTRY URL:포트>/v2/_catalog
+
+{"repositories":["acirstrapi","acirweb","baabfill-admin","baabfill-api","baabfill-web","baas.admin.was","baas.badd.was","baas.badd.web","baas.cwcar.web","baas.evking.app","baas.evking.was","baas.evking.web","baas.springbatch.was","baas.subcal.api","baas.subcal.web","badd.api","batchserver","chronograf","convertserver","csms-backend","csms-frontend","csms-websocket","ems-batch","ems-bridge","ems-schedule-batch","ems-statics-batch","ems.web.was","ev-data-compressor","ev_simulation","evmonadmmongo","grafana","kapacitor","keystone","mogi","nipaapi","p-ev","parseserver","parseserver_imas","pevapi","pmbis","pmcore","pmg-web","pmg.web.app","pmobd","pmpline","queuemaker","queuemaker_imas","r-ess","rproxy","safety.api","safety.web","statsadmin","sv-controlapi","sv-controlweb","telegraf","toc.web","webmonitor"]}
+```
+
+## 도커 이미지 tags 조회
+
+위에서 조회된 repositories 정보로 태그 정보를 조회했습니다.
+
+```bash {3-5}
+curl -X GET <REGISTRY URL:포트>/v2/<REPOSITORY 이름>/tags/list
+
+{"name":"baas.admin.was","tags": ["23110502", "24010402" ...]}
+```
+
+## 도커 이미지 content digest 조회
+
+```bash {3-5}
+curl -v --silent -H "Accept: application/vnd.docker.distribution.manifest.v2+json" -X GET http://<REGISTRY URL:포트>/v2/<REPOSITORY 이름>/manifests/<TAG 이름> 2>&1 | grep Docker-Content-Digest | awk '{print ($3)}'
+
+sha256:d34d61487075d127bf6dd2906ea3abc50e0a3cd9aa2f230fc41b253b153a17ee
+```
+
+## 도커 이미지 manifest 삭제
+
+```bash {3-5}
+curl -v --silent -H "Accept: application/vnd.docker.distribution.manifest.v2+json" -X DELETE http://<REGISTRY URL:포트>/v2/<REPOSITORY 이름>/manifests/<DIGEST 정보>
+```
+
+:::warning
+curl로 삭제 요청을 보냈는데 삭제되지 않는 오류가 발생하는 경우가 있습니다.
+이런 경우 registry config.yml 속성에 delete.enable 값을 true로 설정해야합니다.
+:::
+
+### registry config 설정 & 재시작
+
+```bash title="modified-config.yml" {3-20}
+vi modified-config.yml
+
+version: 0.1
+log:
+  fields:
+    service: registry
+storage:
+  cache:
+    blobdescriptor: inmemory
+  filesystem:
+    rootdirectory: /var/lib/registry
+http:
+  addr: :5000
+  headers:
+    X-Content-Type-Options: [nosniff]
+health:
+  storagedriver:
+    enabled: true
+    interval: 10s
+    threshold: 3
+```
+
+파일을 생성하고 docker registry에 해당 config.yml 파일을 복사하고 재시작하고 다시 삭제 요청을 보내면 정상 처리되는 것을 확인할 수 있습니다.
+
+```bash
+docker cp modified-config.yml registry:/etc/docker/registry/config.yml
+docker restart
+```
+
+## 도커 GC(Garbage Collection) 실행
+
+삭제 요청을 한 뒤 Garbage Collection 호출해야 실제로 파일이 지워집니다.
+
+```bash
+docker exec -it registry registry garbage-collect /etc/docker/registry/config.yml
+```
+
+## 삭제 스크립트 작성
+
+이미지와 태그들이 많아 일일히 작성하기 귀찮아 스크립트로 작성하였습니다.<br/>
+최신 latest 태그 빼고 이전 태그들 모두 삭제하는 스크립트입니다.
+
+```bash title="registry-clear.sh"
+#!/bin/bash
+projects_json=$(curl -X GET "<REGISTRY URL:포트>/v2/_catalog")
+projects=($(echo $projects_json | jq -r '.repositories[]'))
+
+for project in "${projects[@]}"; do
+
+  echo "project name: $project"
+  tags_json=$(curl -s -X GET "<REGISTRY URL:포트>/v2/$project/tags/list")
+  tags=($(echo $tags_json | jq -r '.tags[] | select(. != "latest")'))
+
+  for tag in "${tags[@]}"; do
+
+    echo "tag: $tag"
+    digest=$(curl -v --silent -H "Accept: application/vnd.docker.distribution.manifest.v2+json" \
+      -X GET "<REGISTRY URL:포트>/v2/$project/manifests/$tag" 2>&1 | grep docker-content-digest | awk '{print $3}')
+
+    if [ ! -z "$digest" ]; then
+      echo "digest: $digest"
+      digest=$(echo $digest | tr -d '\r')
+      delete_response=$(curl -v --silent -H "Accept: application/vnd.docker.distribution.manifest.v2+json" \
+        -X DELETE "<REGISTRY URL:포트>/v2/$project/manifests/$digest" 2>&1)
+      echo "Delete response: $delete_response"
+    else
+      echo "Digest not found - tag: $tag"
+    fi
+  done
+
+  exec=$(docker exec -it registry registry garbage-collect /etc/docker/registry/config.yml)
+  list=$(curl -X GET <REGISTRY URL:포트>/v2/$project/tags/list)
+  echo "Result: $list"
+
+done
+```
