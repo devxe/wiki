@@ -1,0 +1,86 @@
+---
+sidebar_position: 1
+author: Roy
+---
+
+import Highlight from "@site/src/components/Highlight";
+import UnderLine from "@site/src/components/UnderLine";
+
+# SSL 적용1 (nginx)
+
+해당 예제는 cafe24에서 SSL 인증서를 발급 받은 후 별도 서버에 적용하는 방법입니다.
+
+### 1. 인증서 합치기
+
+```bash
+cat ssl.crt > cert.crt
+echo   >> cert.crt
+cat chain_all_ssl.crt >> cert.crt
+```
+
+:::caution Warning
+-----END CERTIFICATE----------BEGIN CERTIFICATE-----<br/>
+인증서를 합칠 때 아래와 같이 병합되어야 하는데, 위와 같이 나올 수 있어 줄바꿈 처리<br/>
+-----END CERTIFICATE----<br/>
+------BEGIN CERTIFICATE-----<br/>
+:::
+
+### 2. 키파일 암호 제거
+
+```bash
+# key 파일의 passphrase 제거
+openssl rsa -in ssl.key -out cert.key
+```
+
+:::caution Warning
+키 파일에 암호를 제거하지 않으면 nginx를 재시작할 때마다 password를 매번 입력해야합니다.
+:::
+
+### 3. 인증서 파일 nginx 위치에 두기
+
+```bash
+sudo mkdir /etc/nginx/ssl
+sudo mv ./cert.crt /etc/nginx/ssl/
+sudo mv ./cert.key /etc/nginx/ssl/
+```
+
+### 4. nginx 설정 파일 수정
+
+```bash
+sudo vi /etc/nginx/conf.d/ssl.conf
+server {
+    listen       443 ssl;
+    server_name  my_domain.com;
+
+    ssl_certificate /etc/nginx/ssl/cert.crt;
+    ssl_certificate_key /etc/nginx/ssl/cert.key;
+
+    location / {
+        proxy_pass      http://127.0.0.1:3000;
+    }
+}
+```
+
+### 5. nginx 재시작
+
+:::success
+필수는 항목은 아니지만 재시작 전에 인증서가 올바른지 또는 nginx 설정이 적용되었는지 확인할 수 있습니다.
+
+```bash
+# Modulus 값이 동일한지 확인
+openssl x509 -noout -modulus -in cert.crt
+openssl rsa -noout -modulus -in cert.key
+```
+
+```bash
+# Modulus 값이 동일하다면 설정 파일이 적용되었는지 확인
+nginx -t
+nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+nginx: configuration file /etc/nginx/nginx.conf test is successful
+```
+
+:::
+
+```bash
+sudo systemctl restart nginx
+```
